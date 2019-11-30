@@ -58,15 +58,6 @@ FIL		file;
 const char *firmware_file = "firmware.bin";
 const char *firmware_old  = "firmware.cur";
 
-void setleds(int leds)
-{
-	GPIO_write(LED1, leds &  1);
-	GPIO_write(LED2, leds &  2);
-	GPIO_write(LED3, leds &  4);
-	GPIO_write(LED4, leds &  8);
-	GPIO_write(LED5, leds & 16);
-}
-
 int dfu_btn_pressed(void)
 {
 	return GPIO_get(DFU_BTN);
@@ -100,8 +91,6 @@ void check_sd_firmware(void)
 				f_close(&file);
 				return;
 			}
-
-			setleds((address - USER_FLASH_START) >> 15);
 
 // 			printf("\t0x%lx\n", address);
 
@@ -187,19 +176,11 @@ int main(void)
 
 	GPIO_init(DFU_BTN); GPIO_input(DFU_BTN);
 
-	GPIO_init(LED1); GPIO_output(LED1);
-	GPIO_init(LED2); GPIO_output(LED2);
-	GPIO_init(LED3); GPIO_output(LED3);
-	GPIO_init(LED4); GPIO_output(LED4);
-	GPIO_init(LED5); GPIO_output(LED5);
-
 	// turn off heater outputs
 	GPIO_init(P2_4); GPIO_output(P2_4); GPIO_write(P2_4, 0);
 	GPIO_init(P2_5); GPIO_output(P2_5); GPIO_write(P2_5, 0);
 	GPIO_init(P2_6); GPIO_output(P2_6); GPIO_write(P2_6, 0);
 	GPIO_init(P2_7); GPIO_output(P2_7); GPIO_write(P2_7, 0);
-
-	setleds(31);
 
 	UART_init(UART_RX, UART_TX, APPBAUD);
 
